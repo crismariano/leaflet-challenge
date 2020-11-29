@@ -1,8 +1,8 @@
 // Wee 17: leaflet-challenge homework
 
+// Endpoint selections
 // https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
 // https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson
-// Store our API endpoint inside queryURL
 
 
 // Store our API endpoint inside queryURL
@@ -13,6 +13,16 @@ var myMap = L.map("map", {
   center: [37.09, -95.71],
   zoom: 4
 });
+
+// Define tile layer
+var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+  tileSize: 512,
+  maxZoom: 18,
+  zoomOffset: -1,
+  id: "mapbox/light-v10",
+  accessToken: API_KEY
+}).addTo(myMap);
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -26,6 +36,7 @@ d3.json(queryUrl, function(data) {
     var latLng = L.latLng(coordinates.lat, coordinates.lng);
     var magnitude = features[i].properties.mag;
     var title = features[i].properties.title;
+    var time = features[i].properties.time;
     
     // Set colors for magnitude markers and legend
     var color = "";
@@ -54,19 +65,11 @@ d3.json(queryUrl, function(data) {
       color: "none",
       fillColor: color,
       radius: magnitude * 30000
-    }).bindPopup("<h3>Earthquake Info</h3>" + "<hr>" + "<h3>" + title + "</h3>").addTo(myMap);
+    }).bindPopup("<h2>Earthquake Data</h2>" + "<hr>" + "<h3>Magnitude and Place: " + title + "</h3>" + "<hr> <h3>Time: " + new Date(time) + "</h3>").addTo(myMap);
   }
+
 });
 
-// Define streetmap
-var light = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-  attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-  tileSize: 512,
-  maxZoom: 18,
-  zoomOffset: -1,
-  id: "mapbox/light-v10",
-  accessToken: API_KEY
-}).addTo(myMap);
 
 
 
