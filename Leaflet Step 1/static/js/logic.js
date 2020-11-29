@@ -68,6 +68,25 @@ d3.json(queryUrl, function(data) {
     }).bindPopup("<h2>Earthquake Data</h2>" + "<hr>" + "<h3>Magnitude and Place: " + title + "</h3>" + "<hr> <h3>Time: " + new Date(time) + "</h3>").addTo(myMap);
   }
 
+  // Add legend - from leaflet documentation
+  //var getColor = ["#80FF00", "#BFFF00", "#FFBF00", "#FF8000", "#FF4000", "#FF0000"];
+
+  var legend = L.control({position: 'bottomright'});
+  legend.onAdd = function(myMap) {
+    var div = L.DomUtil.create('div', 'info legend'),
+    grades = [0, 1, 2, 3, 4, 5],
+    labels = [];
+
+    // loop through density intervals and generate label with colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+        '<i style="background:' + (grades[i] + 1) + '"></i> ' +
+        grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+    return div;
+  };
+  legend.addTo(myMap);
+
 });
 
 
